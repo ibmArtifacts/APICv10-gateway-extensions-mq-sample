@@ -8,3 +8,8 @@ This document will go over the example of creating an MQ object and log target w
   
 If on OCP/k8s and you haven't enabled the DataPower webgui yet, you may use the following instructions to enable and get to the gateway webgui: [APICv10: Enabling DataPower WebGUI](https://github.com/ibmArtifacts/APICv10-Enabling-DataPower-WebGUI)  
   
+#### High-Level Steps  
+- Part 1: Get DataPower cfg code that is the DataPower object.  
+- Part 2: Take the DataPower MQ object cfg code that is the DataPower object, zip it, upload to gateway. and disable/enable API Connect Gateway object on gateway to verify the MQ object is in APIC domain.  
+- Part 3: Use/reference DataPower MQ object on APIC API.  
+  
