@@ -1,4 +1,4 @@
-# APICv10-gateway-extensions  
+# APICv10 Gateway Extensions: MQ Sample  
 API Connect gateway extensions are ways to infuse datapower objects or services into the APIC framework to be referenced or used on APIC.  
 For example, if there are MQ objects or custom logging targets that you would like to create within APIC, you cannot just create them in the APIC domain on the DataPower Gateway because they may be overriden by the APIC manager, or lost once pod is rebooted on OCP/k8s deployments.  
 The best way to get desired DataPower objects or services into the APIC framework, is to create gateway extensions on APIC.  
