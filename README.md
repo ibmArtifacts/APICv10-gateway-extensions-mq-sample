@@ -80,6 +80,38 @@ Then verify that the MQ object is set.
 You may now create APIs that uses the DataPower MQ object.  
 This section will help you build an API to use that DataPower MQ object.  
 
-1. Create an API with no security on it for testing purposes. Details about creating new REST APIs may be found in the API documentation: [Createing a new REST OpenAPI definition](https://www.ibm.com/docs/en/api-connect/10.0.5.x_lts?topic=definition-creating-new-rest-openapi), or you may use the sample API created here.
-2. In the sample API, ensure that the Parse policy 
+1. Create an API with no security on it for testing purposes. Details about creating new REST APIs may be found in the API documentation: [Createing a new REST OpenAPI definition](https://www.ibm.com/docs/en/api-connect/10.0.5.x_lts?topic=definition-creating-new-rest-openapi), or you may use the sample API created [here](https://github.com/ibmArtifacts/APICv10-gateway-extensions/blob/main/sample-api-using-mq-object.yaml).  
+  
+2. In the sample API, ensure that the Parse policy and the GatewayScript are position like so:  
+![image](https://user-images.githubusercontent.com/66093865/231633462-645f77d8-5701-4b44-afdd-79063596984b.png)  
+  
+3. The following code goes into the Gateway and that is what will use the DataPower MQ object to put messages on the queue.  
+```  
+var urlopen  = require('urlopen');
+
+var inpMsg = context.get('request.body');
+console.log('****inpMsg: ' + inpMsg);
+
+var dpmqurl = { target: 'dpmq://INPUT_QUEUE_MANAGER_OBJECT_NAME_HERE/?',
+    requestQueue: 'INPUT_REQUEST_QUEUE_HERE',
+    transactional: false,
+    sync: false,
+    timeOut: 10000,
+    data: inpMsg };
+console.log('****dpmqurl: ' + JSON.stringify(dpmqurl));
+
+urlopen.open (dpmqurl, function (error, response) {
+    // handle the error when connecting to MQ
+    if (error) {
+        var msg = error + ' errorCode= ' + error.errorCode;
+        console.error("MQ error is %s", msg);
+        throw error;
+    }
+    
+    var vResponse = response.headers.MQMD
+	context.message.body.write(vResponse);
+	context.message.header.set('Content-Type', "application/xml");
+});
+```  
+
 
