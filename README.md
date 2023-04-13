@@ -76,8 +76,10 @@ Then verify that the MQ object is set.
 ![image](https://user-images.githubusercontent.com/66093865/231548710-731834fa-d0bc-4828-b952-f662d681f74f.png)  
   
 
-
-
 ### Use/reference the DataPower object on APIC API  
+You may now create APIs that uses the DataPower MQ object.  
+This section will help you build an API to use that DataPower MQ object.  
 
+1. Create an API with no security on it for testing purposes. Details about creating new REST APIs may be found in the API documentation: [Createing a new REST OpenAPI definition](https://www.ibm.com/docs/en/api-connect/10.0.5.x_lts?topic=definition-creating-new-rest-openapi), or you may use the sample API created here.
+2. In the sample API, ensure that the Parse policy 
 
