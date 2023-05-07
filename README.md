@@ -15,7 +15,9 @@ If on OCP/k8s and you haven't enabled the DataPower webgui yet, you may use the 
 - Part 3 Use/reference the DataPower object on APIC API.  
   
 ### Create the DataPower object and export  
-When a DataPower object or service is created, applied, and when the "save config" is clicked, it is written to the .cfg file in the File Management > config directory.  
+Create the MQ object on a DataPower domain other than the default domain.  
+Ideally, you may create a sandbox application domain, which may be deleted later. It will not be needed; the domain is created to get the specific export of the object you would like to infuse into the apiconnect framework.  
+
 The following is an example of an MQ object and how to export the DataPower object.  
 ![image](https://user-images.githubusercontent.com/66093865/236657111-8f701c37-82cd-4723-9cb4-09394e0c0fc4.png)  
   
