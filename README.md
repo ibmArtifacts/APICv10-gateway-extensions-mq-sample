@@ -36,6 +36,7 @@ NOTE: The datapower export file have been renamed to dp-export-mq-with-tls.zip f
 
 ### Create the manifest.json file to package together as the Gateway Extension zip & upload to APIC   
 1. Create the manifest.json file as sampled below:  
+More details on the manifest properties may be found in the [IBM documentation for Gateway extension manifest](https://www.ibm.com/docs/en/api-connect/10.0.5.x_lts?topic=gateway-extensions-manifest).
 ```  
 {
     "extension": {
