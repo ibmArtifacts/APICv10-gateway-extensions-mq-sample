@@ -13,69 +13,56 @@ If on OCP/k8s and you haven't enabled the DataPower webgui yet, you may use the 
   
 #### High-Level Steps  
 - Part 1 Create the DataPower object and export.  
-- Part 2: Create Gateway Extension & upload to APIC: Take the DataPower cfg code that is the DataPower object, place it in a notepad, zip it, upload to gateway. and disable/enable API Connect Gateway object on gateway to verify the MQ object is in APIC domain.  
+- Part 2: Create the manifest.json file to package together as the Gateway Extension zip & upload to APIC.  
 - Part 3 Use/reference the DataPower object on APIC API.  
   
-### Gather/Create DataPower CFG Code  
+### Create the DataPower object and export  
 When a DataPower object or service is created, applied, and when the "save config" is clicked, it is written to the .cfg file in the File Management > config directory.  
-The following is an example of an MQ object and its associated DataPower cfg code. This is what we need if we want to embed this service into the APIC framework.  
-![image](https://user-images.githubusercontent.com/66093865/231477460-e90757e9-5378-4541-87c7-093dd901291d.png)  
-
-
-### Create Gateway Extension & Upload to APIC   
-To create the Gateway Extension take the desire cfg code and create a new file on your local system titled something like "apic-gw-extension.cfg".  
-Input the desired DataPower cfg code into the "apic-gw-extension.cfg" like something similar to below.   
+The following is an example of an MQ object and how to export the DataPower object.  
+![image](https://user-images.githubusercontent.com/66093865/236657111-8f701c37-82cd-4723-9cb4-09394e0c0fc4.png)  
+  
+NOTE: If you have certificates that are required with the service, you may:
+1. unzip the export, 
+2. update the export.xml file with the following <file> stanza into the <files> section, 
 ```
-top; configure terminal;
-
-password-alias "mqm_pw"
-password INPUT_PASSWORD_HERE
-exit
-
-%if% available "mq-qm"
-
-mq-qm "INPUT_QUEUE_MANAGER_OBJECT_NAME_HERE"
-  hostname INPUT_MQ_CLUSTER_IP_HERE(WITH_PORT)
-  queue-manager "INPUT_QUEUE_MANAGER_NAME_HERE"
-  ccsid 819
-  channel-name "SYSTEM.DEF.SVRCONN"
-  mqcsp-userid "mqm"
-  mqcsp-password-alias mqm_pw
-  heartbeat 300
-  maximum-message-size 1048576
-  cache-timeout 60
-  no automatic-backout 
-  total-connection-limit 250
-  initial-connections 1
-  sharing-conversations 0
-  no share-single-conversation 
-  no permit-insecure-servers 
-  no permit-ssl-v3 
-  ssl-cipher none
-  no auto-recovery 
-  convert 
-  auto-retry 
-  retry-interval 5
-  retry-attempts 3
-  long-retry-interval 1800
-  reporting-interval 1
-  alternate-user 
-  polling-tolerance 10
-  xml-manager default
-  ssl-client-type proxy
-exit
-
-%endif%
+	<files>
+		<file name="cert:///name_of_cert_here.pem" src="cert/name_of_cert_here.pem" location="cert" />
+	</files>
 ```  
+3. and add a cert directory with the certificate in the directory to be uploaded during the import:  
+![image](https://user-images.githubusercontent.com/66093865/236658062-8709a8e2-c96a-4f15-8f6e-8f15ed9603eb.png)  
+    
+NOTE: The datapower export file have been renamed to dp-export-mq-with-tls.zip.  
 
-The diagram below shows the cfg code of the DataPower MQ object on its own in the apic-gw-extension.cfg, being zipped up, and uploaded to the gateway in the Cloud Manager > Topology > Gateway.  
-![image](https://user-images.githubusercontent.com/66093865/231494587-4f44cfc5-9af5-441a-bef8-78a3c44d3554.png)  
+### Create the manifest.json file to package together as the Gateway Extension zip & upload to APIC   
+1. Create the manifest.json file as sampled below:  
+```  
+{
+    "extension": {
+      "properties": {
+        "deploy-policy-emulator": false
+      },
+      "files": [
+        {
+          "filename":"dp-export-mq-with-tls.zip",
+          "deploy": "immediate",
+          "type": "dp-import"
+        }
+    ]
+  }   
+}
+```
+2. Zip up the manifest.json and datapower export.  
+![image](https://user-images.githubusercontent.com/66093865/236659207-1294dd1f-1348-4c4c-bce5-b1c9ba30e6a6.png)  
   
-#### Force Management configuration push to gateway
-Force the Management subsystem to push the configuration to the gateway by logging into the Gateway, selecting the apiconnect domain, and navigating into the API Connect Gateway Service. Disable and then reenable the Administrative State.  
-![image](https://user-images.githubusercontent.com/66093865/231548666-5203808e-39c8-4466-944e-78d36e8ea136.png)  
+3. Navigate to the Cloud Manager > Topology section, locate the Gateway line item, select the elipsis (![image](https://user-images.githubusercontent.com/66093865/236659714-3b0dd9df-fd01-41b4-8266-90857a2405e7.png)), and select Configure gateway extension.  
+Add the gateway extension.   
+![image](https://user-images.githubusercontent.com/66093865/236659775-b3c0a601-c6a5-4192-bfc5-2b349848dc03.png)  
   
-Then verify that the MQ object is set.  
+Once uploaded, you will see the gateway-extension set:  
+![image](https://user-images.githubusercontent.com/66093865/236660097-71073a9a-ea17-4b12-8781-5e910a58ddcb.png)  
+  
+Verify that the MQ object is set by logging into the gateways apiconnect domain:  
 ![image](https://user-images.githubusercontent.com/66093865/231548710-731834fa-d0bc-4828-b952-f662d681f74f.png)  
   
 
