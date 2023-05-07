@@ -32,7 +32,7 @@ NOTE: If you have certificates that are required with the service, you may:
 3. and add a cert directory with the certificate in the directory to be uploaded during the import:  
 ![image](https://user-images.githubusercontent.com/66093865/236658062-8709a8e2-c96a-4f15-8f6e-8f15ed9603eb.png)  
     
-NOTE: The datapower export file have been renamed to dp-export-mq-with-tls.zip.  
+NOTE: The datapower export file have been renamed to dp-export-mq-with-tls.zip for this example.  
 
 ### Create the manifest.json file to package together as the Gateway Extension zip & upload to APIC   
 1. Create the manifest.json file as sampled below:  
