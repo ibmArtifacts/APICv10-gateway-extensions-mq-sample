@@ -107,5 +107,12 @@ urlopen.open (dpmqurl, function (error, response) {
 
 With correct MQ inputs, you may test the API and check the message PUT into the queue.  
 ![image](https://user-images.githubusercontent.com/66093865/231655989-c2809cdf-f725-4a8d-8def-3381082e8ced.png)  
+  
+NOTE: The MQ response headers are set to output as the response body as shown in the gatewayscript code:
+```
+    var vResponse = response.headers.MQMD
+	context.message.body.write(vResponse);  
+```  
+	
 
 
